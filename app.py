@@ -15,8 +15,8 @@ import os
 
 app = Flask(__name__)
 viber = Api(BotConfiguration(
-    name='LaDaBot',
-    avatar='https://istmedia.rs/wp-content/uploads/2020/06/lada-niva.jpg',
+    name='LadaBotTestBot',
+    avatar='http://viber.com/avatar.jpg',
     auth_token=os.getenv('AUTH_TOKEN')
 ))
 
