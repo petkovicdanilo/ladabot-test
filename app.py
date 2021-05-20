@@ -3,7 +3,7 @@ from viberbot import Api
 from viberbot.api.bot_configuration import BotConfiguration
 from viberbot.api.messages import VideoMessage
 from viberbot.api.messages.text_message import TextMessage
-import logging
+import os
 
 from viberbot.api.viber_requests import ViberConversationStartedRequest
 from viberbot.api.viber_requests import ViberFailedRequest
@@ -11,19 +11,20 @@ from viberbot.api.viber_requests import ViberMessageRequest
 from viberbot.api.viber_requests import ViberSubscribedRequest
 from viberbot.api.viber_requests import ViberUnsubscribedRequest
 
-import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 viber = Api(BotConfiguration(
-    name='LadaBotTestBot',
-    avatar='http://viber.com/avatar.jpg',
+    name=os.getenv('BOT_NAME'),
+    avatar='http://site.com/avatar.jpg',
     auth_token=os.getenv('AUTH_TOKEN')
 ))
 
 
 @app.route('/', methods=['POST'])
 def incoming():
-    logger.debug("received request. post data: {0}".format(request.get_data()))
     # every viber message is signed, you can verify the signature using this method
     if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
         return Response(status=403)
@@ -42,10 +43,10 @@ def incoming():
             TextMessage(text="thanks for subscribing!")
         ])
     elif isinstance(viber_request, ViberFailedRequest):
-        logger.warn("client failed receiving message. failure: {0}".format(viber_request))
+        pass
 
     return Response(status=200)
 
+
 if __name__ == "__main__":
-    viber.set_webhook(os.getenv('WEBHOOK_URL'))
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=os.getenv('PORT'), debug=True)
