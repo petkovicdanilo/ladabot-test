@@ -42,14 +42,15 @@ def incoming():
 
     if isinstance(viber_request, ViberMessageRequest):
         message = viber_request.message
+        message1=TextMessage(None,None,'Jedi govna',None)
         viber.send_messages(viber_request.sender.id, [
-            message
+            message1
         ])
     elif isinstance(viber_request, ViberConversationStartedRequest) \
             or isinstance(viber_request, ViberSubscribedRequest) \
             or isinstance(viber_request, ViberUnsubscribedRequest):
         viber.send_messages(viber_request.sender.id, [
-            TextMessage(None, None, viber_request.get_event_type())
+            TextMessage(None, None, viber_request.get_event_type(),None)
         ])
     elif isinstance(viber_request, ViberFailedRequest):
         logger.warn(
